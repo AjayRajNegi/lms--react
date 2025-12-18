@@ -44,3 +44,16 @@
 .page-form button:hover {
   background: #1d4ed8;
 }
+
+.page-message {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.page-message.error {
+  color: #b91c1c;
+}
+
+.page-message.success {
+  color: #15803d;
+}

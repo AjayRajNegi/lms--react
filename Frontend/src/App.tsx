@@ -2,6 +2,8 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import AddBooks from "./pages/AddBooks";
 import RequestBooks from "./pages/RequestBooks";
+import BookList from "./pages/BookList";
+import BookDetails from "./pages/BookDetails";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
             />
             <Route path="/add-books" element={<AddBooks />} />
             <Route path="/request-books" element={<RequestBooks />} />
+            <Route path="/books" element={<BookList />} />
+            <Route path="/books/:id/:slug" element={<BookDetails />} />
           </Routes>
         </main>
       </div>

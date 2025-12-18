@@ -8,6 +8,7 @@ export default function Navbar() {
         <Link to="/">Home</Link>
         <Link to="/add-books">Add Books</Link>
         <Link to="/request-books">Request Books</Link>
+        <Link to="/books">Dummy Dynamic Books</Link>
       </nav>
     </header>
   );
