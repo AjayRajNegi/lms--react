@@ -22,3 +22,20 @@ divide(4, 2)
     console.log(result);
   })
   .catch((error) => console.log(error, "err"));
+
+async function divide(a, b) {
+  try {
+    if (b === 0) throw new Error("Cannot be divided by 0");
+    return a / b;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+async function mainFn() {
+  console.log(await divide(10, 0));
+  console.log("Divide", await divide(10, 2));
+}
+
+mainFn();
