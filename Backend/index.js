@@ -1,41 +1,26 @@
-function delayFn(time) {
-  //   console.log("Function");
-  return new Promise((resolve) => setTimeout(resolve, time));
-}
-console.log("Promies starts");
-delayFn(2000).then(() => {
-  console.log("After 2 seconds.");
+const express = require("express");
+const path = require("path");
+
+const app = express();
+
+app.set("view engine", "ejs");
+
+app.set("views", path.join(__dirname, "views"));
+
+const products = [
+  { id: 1, title: "Product 1" },
+  { id: 2, title: "Product 2" },
+];
+
+app.get("/", (req, res) => {
+  res.render("home", { title: "Home", products: products });
 });
 
-function divide(a, b) {
-  return new Promise((resolve, reject) => {
-    if (b === 0) {
-      reject("Can not perofrm division by 0");
-    } else {
-      resolve(a / b);
-    }
-  });
-}
+app.get("about", (req, res) => {
+  app.render("about", { title: "About" });
+});
 
-divide(4, 2)
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((error) => console.log(error, "err"));
-
-async function divide(a, b) {
-  try {
-    if (b === 0) throw new Error("Cannot be divided by 0");
-    return a / b;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
-
-async function mainFn() {
-  console.log(await divide(10, 0));
-  console.log("Divide", await divide(10, 2));
-}
-
-mainFn();
+const port = 3000;
+app.listen(port, () => {
+  console.log("Running at port 3000");
+});
