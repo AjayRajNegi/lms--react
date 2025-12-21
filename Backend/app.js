@@ -1,83 +1,70 @@
-const express = require("express");
-const app = express();
+const mongoose = require("mongoose");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+mongoose
+  .connect(
+    "mongodb+srv://ajayrajnegi111:ajayrajnegi111@cluster0.iiatka6.mongodb.net/"
+  )
+  .then(() => console.log("Database successfully connected."))
+  .catch((e) => console.log(e));
 
-let books = [
-  {
-    id: 1,
-    title: "book1",
-  },
-  {
-    id: 2,
-    title: "book2",
-  },
-];
-
-app.get("/", (req, res) => {
-  res.json({
-    message: "Welcome to our book store.",
-  });
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  age: Number,
+  isActive: Boolean,
+  tags: [String],
+  createdAt: { type: Date, default: Date.now },
 });
 
-app.get("/get/:id", (req, res) => {
-  const book = books.find((item) => item.id === parseInt(req.params.id));
+const User = mongoose.model("User", userSchema);
 
-  if (book) {
-    res.status(200).json(book);
-  } else {
-    res.status(404).json({
-      message: "Book not found!",
+async function runQueryExamples() {
+  try {
+    const newUser = await User.create({
+      name: "Travis",
+      email: "Travis@gmail.com",
+      age: 59,
+      isActive: false,
+      tags: ["developer", "designer", "manager"],
     });
+    // console.log("Created new user.", newUser);
+    // const allUsers = await User.find({});
+    // console.log(allUsers);
+
+    // const getDeactiveUsers = await User.find({
+    //   isActive: false,
+    // });
+    // console.log(getDeactiveUsers);
+
+    // const userById = await User.findById(newUser._id);
+    // console.log(userById);
+
+    // const selectedFields = await User.find().select("name email -_id");
+    // console.log(selectedFields);
+
+    // const limitedUser = await User.find().limit(5).skip(3);
+    // console.log(limitedUser);
+
+    // const sortedUser = await User.find().sort({ age: -1 });
+    // console.log(sortedUser);
+
+    // const countActive = await User.countDocuments({ isActive: false });
+    // console.log(countActive);
+
+    const updateUser = await User.findByIdAndUpdate(
+      newUser._id,
+      {
+        $set: { age: 100 },
+        $push: { tags: "updated" },
+      },
+      { new: true }
+    );
+    console.log(updateUser);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    await mongoose.connection.close();
   }
-});
+}
 
-app.post("/add", (req, res) => {
-  const newBook = {
-    id: Math.floor(Math.random() * 1000),
-    title: `book${Math.floor(Math.random() * 1000)}`,
-  };
-
-  books.push(newBook);
-  res.status(200).json({ data: newBook, message: "New book added." });
-});
-
-app.put("/update/:id", (req, res) => {
-  const findCurrentBook = books.find(
-    (bookItem) => bookItem.id === parseInt(req.params.id)
-  );
-  console.log(findCurrentBook);
-
-  if (findCurrentBook) {
-    findCurrentBook.title = req.body.title || findCurrentBook.title;
-
-    res.status(200).json({
-      message: "Book updates",
-      data: findCurrentBook,
-    });
-  } else {
-    res.status(404).json({
-      message: "Book not found",
-    });
-  }
-});
-
-app.delete("/delete/:id", (req, res) => {
-  const findBook = books.find((item) => item.id === parseInt(req.params.id));
-
-  if (findBook !== -1) {
-    const deletedBook = books.splice(findBook, 1);
-    res.status(200).json({
-      message: "Book deleted.",
-      data: deletedBook[0],
-    });
-  } else {
-    res.status(404).json({ message: "Error" });
-  }
-});
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log("Server is running.");
-});
+runQueryExamples();
