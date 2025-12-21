@@ -20,13 +20,13 @@ const User = mongoose.model("User", userSchema);
 
 async function runQueryExamples() {
   try {
-    // const newUser = await User.create({
-    //   name: "Travis",
-    //   email: "Travis@gmail.com",
-    //   age: 59,
-    //   isActive: false,
-    //   tags: ["developer", "designer", "manager"],
-    // });
+    const newUser = await User.create({
+      name: "Travis",
+      email: "Travis@gmail.com",
+      age: 59,
+      isActive: false,
+      tags: ["developer", "designer", "manager"],
+    });
     // console.log("Created new user.", newUser);
     // const allUsers = await User.find({});
     // console.log(allUsers);
@@ -48,8 +48,18 @@ async function runQueryExamples() {
     // const sortedUser = await User.find().sort({ age: -1 });
     // console.log(sortedUser);
 
-    const countActive = await User.countDocuments({ isActive: false });
-    console.log(countActive);
+    // const countActive = await User.countDocuments({ isActive: false });
+    // console.log(countActive);
+
+    const updateUser = await User.findByIdAndUpdate(
+      newUser._id,
+      {
+        $set: { age: 100 },
+        $push: { tags: "updated" },
+      },
+      { new: true }
+    );
+    console.log(updateUser);
   } catch (error) {
     console.log(error);
   } finally {
