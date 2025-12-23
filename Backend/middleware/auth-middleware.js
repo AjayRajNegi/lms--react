@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const authMiddleware = (req, res, next) => {
-  const authHeader = req.headers("authorization");
+  const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
@@ -19,6 +19,7 @@ const authMiddleware = (req, res, next) => {
     return res.status(500).json({
       success: false,
       message: "Denied",
+      error: error,
     });
   }
 };
