@@ -38,11 +38,25 @@ const uploadImage = async (req, res) => {
 
 const fetchImages = async (req, res) => {
   try {
-    const images = await Image.find({});
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+    const sortBy = req.query.sortBy || "createdAt";
+    const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
+    const totalImages = await Image.countDocuments();
+    const totalPages = Math.ceil(totalImages / limit);
+    const sortObj = {};
+    sortObj[sortBy] = sortOrder;
+
+    const images = await Image.find().sort(sortObj).skip(skip).limit(limit);
+
     if (images) {
       return res.status(200).json({
         success: true,
         data: images,
+        currentPage: page,
+        totalPages: totalPages,
+        totalImages: totalImages,
       });
     }
   } catch (error) {
